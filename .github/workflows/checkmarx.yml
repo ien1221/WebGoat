@@ -1,0 +1,22 @@
+name: Checkmarx One Scan
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkmarx One scan
+        uses: checkmarx/ast-github-action@main
+        with:
+          base_uri: https://sng.ast.checkmarx.net   # 換成你 tenant 的 region URL
+          cx_tenant: apac-workshop
+          cx_client_id: ${{ secrets.CX_CLIENT_ID }}
+          cx_client_secret: ${{ secrets.CX_CLIENT_SECRET }}
+          project_name: ${{ github.repository }}
+          branch: ${{ github.ref_name }}
+          additional_params: --scan-types sast,sca,iac-security
